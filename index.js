@@ -1,55 +1,53 @@
 #! /usr/bin/env node
 import inquirer from "inquirer";
 let todos = [];
-// let condition = true;
-async function creat(todos) {
+async function name() {
     do {
-        let welcom = "Welcom to the todolist";
-        let oprate = await inquirer.prompt({
-            name: "op",
-            type: "list",
-            message: "What you want to do ?",
-            choices: ["Add", "View", "Update", "Delete"],
-        });
-        if (oprate.op === "Add") {
-            let additem = await inquirer.prompt({
-                name: "adit",
-                type: "input",
-                message: "Please Add Item!",
-            });
-            todos.push(additem.adit);
-            console.log(todos);
-        }
-        if (oprate.op === "View") {
-            console.log(todos);
-        }
-        if (oprate.op === "Update") {
-            let Updat = await inquirer.prompt([
-                {
-                    name: "u1",
-                    type: "list",
-                    message: "Select item to update",
-                    choices: todos,
-                }
-            ]);
-            let Updat2 = await inquirer.prompt([
-                {
-                    name: "u2",
+        let welcom = await inquirer.prompt([{
+                name: "wel",
+                type: "rawlist",
+                message: "What do you want to do ?",
+                choices: ["Add", "View", "Update", "Delete"]
+            }]);
+        if (welcom.wel === "Add") {
+            let ad = await inquirer.prompt([{
+                    name: "a",
                     type: "input",
-                    message: "Update Item",
-                }
-            ]);
-            let newUp = todos.filter(val => val != Updat.u1);
-            todos = [...todos, Updat2.u2];
+                    message: "Please Add Items!"
+                }]);
+            todos.push(ad.a);
+            console.log(todos);
         }
-        if (oprate.op === "Delete") {
-            let remove = await inquirer.prompt({
-                name: "rem",
-                type: "list",
-                message: "Select an item to delete",
-                choices: todos
-            });
+        else if (welcom.wel === "View") {
+            console.log(todos);
         }
-    } while (true);
+        else if (welcom.wel === "Update") {
+            let upd = await inquirer.prompt([{
+                    name: "up",
+                    type: "list",
+                    message: "Select item for update",
+                    choices: todos.map(val => val)
+                }]);
+            let addU = await inquirer.prompt([{
+                    name: "Addm",
+                    type: "input",
+                    message: "Add item..."
+                }]);
+            let newTo = todos.filter(val => val != upd.up);
+            todos = [...newTo, addU.Addm];
+            console.log(todos);
+        }
+        else if (welcom.wel === "Delete") {
+            let remove = await inquirer.prompt([{
+                    name: "rem",
+                    type: "list",
+                    message: "Delete item",
+                    choices: todos.map(z => z)
+                }]);
+            let newRem = todos.filter(val => val != remove.rem);
+            todos = [...newRem];
+            console.log(todos);
+        }
+    } while (todos);
 }
-creat(todos);
+name();
